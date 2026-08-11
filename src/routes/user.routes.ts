@@ -4,6 +4,7 @@ import { UserController } from "../controllers/user.controllers";
 
 const router = express.Router();
 
+//aqui toi testeando de que lleguen los datos al backend
 router.get("/", (req: Request, res: Response) => {
   res.send({ message: "Estoy en Users!" });
 });
