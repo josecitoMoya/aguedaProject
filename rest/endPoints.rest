@@ -1,0 +1,15 @@
+### GET - Probar ruta
+GET http://localhost:3000/api/users
+
+### POST - Crear usuario
+POST http://localhost:3000/api/users/signup
+Content-Type: application/json
+
+{
+    "userName": "Peter",
+    "userEmail": "juan@mail.com",
+    "userPassword": "123456"
+}
+
+### GET - Login
+GET http://localhost:3000/api/users/login

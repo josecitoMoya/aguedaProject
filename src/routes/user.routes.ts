@@ -1,16 +1,16 @@
-import express from "express";
+import express,{ Request, Response} from "express";
+import { UserController } from "../controllers/user.controllers";
+
 
 const router = express.Router();
 
-router.get("/", (req: express.Request, res: express.Response) => {
+router.get("/", (req: Request, res: Response) => {
   res.send({ message: "Estoy en Users!" });
 });
 
-router.get("/singup", (req: express.Request, res: express.Response) => {
-  res.send({ message: "Aca podes registrar un nuevo usuario" });
-});
+router.post("/signup", UserController.prototype.createUser);
 
-router.get("/login", (req: express.Request, res: express.Response) => {
+router.get("/login", (req: Request, res: Response) => {
   res.send({ message: "Aqui se loguea un usuario!" });
 });
 

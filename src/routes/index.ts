@@ -7,6 +7,6 @@ router.get("/", (req: express.Request, res: express.Response) => {
   res.send({message: "Estoy en routes!"});
 });
 
-router.use("/user", userRoutes);
+router.use("/users", userRoutes);
 
 export default router;
