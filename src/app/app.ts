@@ -4,6 +4,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 
 import router from "../routes/index";
+import {sequelize} from "../database/index";
 
 const { CORS } = process.env;
 
@@ -20,9 +21,9 @@ app.use(
 );
 app.use(cookieParser());
 
-app.get("/", (req: express.Request, res: express.Response) => {
-  res.send({ message: "Estoy en la app!" });
-});
+// app.get("/", (req: express.Request, res: express.Response) => {
+//   res.send({ message: "Estoy en la app!" });
+// });
 
 app.use("/api", router);
 
