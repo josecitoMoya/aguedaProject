@@ -1,11 +1,15 @@
 import app from './app/app';
-import {sequelize} from "./database/index";
+import {dataBase} from "./database/index";
+
+import "./models/User";
+
+ 
 
 const PORT = process.env.PORT || 3000;
 
 const startServer = async () => {
   try {
-    await sequelize.authenticate();
+    await dataBase.sync({ force: false });
     console.log("Database connected successfully.");
     
     app.listen(PORT, () => {

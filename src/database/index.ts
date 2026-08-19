@@ -1,6 +1,6 @@
 import {Sequelize} from "sequelize"
 
-export const sequelize = new Sequelize("rocasrl", "postgres", "postgres", {
+export const dataBase = new Sequelize("rocasrl", "postgres", "postgres", {
     host: "localhost",
     dialect: "postgres",
     logging: false,
