@@ -4,6 +4,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 
 import router from "../routes/index";
+import {dataBase} from "../database/index";
 
 const { CORS } = process.env;
 
