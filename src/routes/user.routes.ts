@@ -4,15 +4,14 @@ import { UserController } from "../controllers/user.controllers";
 
 const router = express.Router();
 
-//aqui toi testeando de que lleguen los datos al backend
-router.get("/", (req: Request, res: Response) => {
-  res.send({ message: "Estoy en Users!" });
-});
+router.get("/", UserController.getAllUsers);
 
-router.post("/signup", UserController.prototype.createUser);
+router.post("/signup", UserController.createUser);
 
-router.get("/login", (req: Request, res: Response) => {
-  res.send({ message: "Aqui se loguea un usuario!" });
-});
+router.post("/login", UserController.getUser);
+
+router.put("/update/:dni", UserController.updateUser);
+
+router.delete("/delete/:dni", UserController.deleteUser);
 
 export default router;

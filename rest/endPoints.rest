@@ -6,10 +6,44 @@ POST http://localhost:3000/api/users/signup
 Content-Type: application/json
 
 {
-    "userName": "Peter",
-    "userEmail": "juan@mail.com",
-    "userPassword": "123456"
+"username": "el noba",
+"dni": 123456,
+"cuit": "27268989191",
+"cuil": "27268989191",
+"phonenumber": "3874065580",
+"address": "Cerca de la plaza alvarado",
+"city": "Salta",
+"province": "Salta",
+"mail": "c@c.com.ar",
+"role": "administrativo",
+"type": "admin"
 }
 
-### GET - Login
-GET http://localhost:3000/api/users/login
+### POST - Login
+POST http://localhost:3000/api/users/login
+Content-Type: application/json
+{
+"username": "jose_moya",
+"mail": "jose_moya@example.com"
+}
+
+#### PUT - Actualizar usuario
+PUT http://localhost:3000/api/users/update/78257895
+Content-Type: application/json  
+
+{
+  "username": "el javi",
+"dni": 78257895,
+"cuit": "27268989191",
+"cuil": "27268989191",
+"phonenumber": "3874065580",
+"address": "quijano",
+"city": "Salta",
+"province": "Salta",
+"mail": "c@c.com",
+"role": "administrativo",
+"type": "admin"
+  }
+
+### DELETE - Eliminar usuario
+DELETE http://localhost:3000/api/users/delete/31948312

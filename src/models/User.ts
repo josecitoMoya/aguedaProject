@@ -17,11 +17,11 @@ export const User = dataBase.define('User', {
     allowNull: false
   },
   cuit: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.STRING(11),
     allowNull: false
   },
   cuil: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.STRING(11),
     allowNull: false
   },
   phonenumber: {
