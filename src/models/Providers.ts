@@ -1,5 +1,4 @@
 import { DataTypes } from "sequelize";
-
 import { dataBase } from "../database/index";
 
 export const Providers = dataBase.define("Providers", {
@@ -15,6 +14,11 @@ export const Providers = dataBase.define("Providers", {
   cuit: {
     type: DataTypes.STRING(11),
     allowNull: false,
+    unique: true,
+    validate: {
+      isNumeric: true,
+      len: [11, 11], // Fuerza exactamente 11 dígitos
+    },
   },
   address: {
     type: DataTypes.STRING,
@@ -28,13 +32,16 @@ export const Providers = dataBase.define("Providers", {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  phonenumber: {
+  phoneNumber: {
     type: DataTypes.STRING,
     allowNull: false,
   },
   mail: {
     type: DataTypes.STRING,
     allowNull: true,
+    validate: {
+      isEmail: true,
+    },
   },
   categoryId: {
     type: DataTypes.INTEGER,
