@@ -1,9 +1,7 @@
 import app from './app/app';
 import {dataBase} from "./database/index";
 
-import "./models/Users";
-
- 
+import "./models";
 
 const PORT = process.env.PORT || 3000;
 
