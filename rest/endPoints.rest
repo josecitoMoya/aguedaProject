@@ -6,15 +6,15 @@ POST http://localhost:3000/api/users/signup
 Content-Type: application/json
 
 {
-"username": "el noba",
-"dni": 123456,
+"username": "test 1",
+"dni": 1234,
 "cuit": "27268989191",
 "cuil": "27268989191",
 "phonenumber": "3874065580",
 "address": "Cerca de la plaza alvarado",
 "city": "Salta",
 "province": "Salta",
-"mail": "c@c.com.ar",
+"mail": "ccc@ccc.com.ar",
 "role": "administrativo",
 "type": "admin"
 }
