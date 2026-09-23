@@ -14,9 +14,9 @@ app.use(express.json());
 app.use(morgan("dev"));
 app.use(
   cors({
-    origin: CORS,
-    credentials: true,
-    methods: ["GET", "POST", "DELETE", "PUT"],
+    // origin: CORS,
+    // credentials: false,
+    // methods: ["GET", "POST", "DELETE", "PUT"],
   }),
 );
 app.use(cookieParser());
