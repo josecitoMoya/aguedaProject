@@ -1,6 +1,7 @@
 import {Users} from '../models'
 
 interface GetUserFilters {
+    id?: number;
     username?: string;
     dni?: number;
     cuit?: string;
@@ -12,6 +13,7 @@ interface GetUserFilters {
     mail?: string;
     role?: string;
     type?: string;
+    password?: string;
 }
 
 
@@ -58,6 +60,22 @@ async function createUser(filters: GetUserFilters) {
     }
 }
 
+async function loginUser(filters: GetUserFilters) {
+    try {
+        console.log("me llego esta data a userServices", filters.username, filters.password)
+        
+        const user = await Users.findOne({
+            where: {username: filters.username, password: filters.password}
+        });
+
+        return user;
+        
+    } catch (error) {
+        console.error('Error fetching users:', error);
+        throw new Error('Failed to fetch users');
+    }
+}
+
 async function getAllUsers() {
     try {
         const users = await Users.findAll();
@@ -70,10 +88,10 @@ async function getAllUsers() {
 
 async function getUser(filters: GetUserFilters) {
     try {
-        console.log("me llego esta data a userServices", filters.username, filters.mail)
+        console.log("me llego esta data a userServices", filters.username, filters.password)
         
         const user = await Users.findOne({
-            where: {username: filters.username,mail: filters.mail}
+            where: {id: filters.id}
         });
 
         return user;

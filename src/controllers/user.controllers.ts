@@ -19,6 +19,20 @@ async function createUser(req: Request, res: Response): Promise<void> {
     }
 }
 
+async function loginUser(req: Request, res: Response): Promise<void> {
+    try {
+        const { username, password } = req.body;
+
+        const user = await UserService.getUser({ username, password });
+
+        !user ? res.status(404).json({ message: 'User not found' }) : res.status(200).json(user);
+    } 
+    
+    catch (error) {
+        res.status(500).json({ message: 'Error al iniciar sesión', error });
+    }
+}
+
 async function getAllUsers(req: Request, res: Response): Promise<void> {
     try {
         const users = await UserService.getAllUsers();
@@ -32,9 +46,9 @@ async function getAllUsers(req: Request, res: Response): Promise<void> {
 
 async function getUser(req: Request, res: Response): Promise<void> {
     try {
-        const { username, mail } = req.body;
+        const { id } = req.params as { id: string };
 
-        const user = await UserService.getUser({ username, mail });
+        const user = await UserService.getUser({ id: parseInt(id) });
 
         !user ? res.status(404).json({ message: 'User not found' }) : res.status(200).json(user);
     } 
@@ -76,6 +90,7 @@ async function deleteUser(req: Request, res: Response): Promise<void> {
 
 export const UserController = {
     createUser,
+    loginUser,
     getAllUsers,
     getUser,
     updateUser,
