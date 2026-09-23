@@ -1,7 +1,7 @@
 import app from './app/app';
 import {dataBase} from "./database/index";
 
-import "./models/User";
+import "./models/Users";
 
  
 
