@@ -1,6 +1,6 @@
 import express from "express";
 import userRoutes from "./user.routes";
-import expensesRoutes from "./expenses.routes";
+import providersRoutes from "./providers.routes";
 
 const router = express.Router();
 
@@ -9,6 +9,6 @@ router.get("/", (req: express.Request, res: express.Response) => {
 });
 
 router.use("/users", userRoutes);
-router.use("/expenses", expensesRoutes);
+router.use("/providers", providersRoutes);
 
 export default router;
