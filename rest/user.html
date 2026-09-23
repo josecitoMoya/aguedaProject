@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pruebas API Usuarios - Proyecto Águeda</title>
+  <style>
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 20px; background: #f0f2f5; }
+    h1 { color: #1a202c; text-align: center; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 15px; max-width: 1300px; margin: 0 auto; }
+    .card { background: white; padding: 15px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+    .card h2 { margin-top: 0; font-size: 1.1rem; color: #2d3748; border-bottom: 2px solid #edf2f7; padding-bottom: 8px; }
+    form { display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; }
+    .row { display: flex; gap: 8px; }
+    .row input, .row select { flex: 1; }
+    input, select { padding: 8px 10px; border: 1px solid #cbd5e0; border-radius: 4px; font-size: 0.85rem; }
+    button { padding: 9px; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; color: white; background-color: #3182ce; margin-top: 5px; }
+    button:hover { opacity: 0.9; }
+    .btn-green { background-color: #38a169; }
+    .btn-orange { background-color: #dd6b20; }
+    .btn-red { background-color: #e53e3e; }
+    .btn-gray { background-color: #4a5568; margin-bottom: 10px; width: 100%; }
+    .list-box { background: #1e1e1e; color: #d4d4d4; padding: 10px; border-radius: 4px; max-height: 300px; overflow-y: auto; font-size: 0.85rem; font-family: monospace; }
+  </style>
+</head>
+<body>
+
+  <h1>👤 Pruebas del Módulo de Usuarios</h1>
+
+  <div class="grid">
+
+    <!-- 1. SIGNUP: POST /api/users/signup -->
+    <div class="card">
+      <h2>1. Crear Usuario (`POST /signup`)</h2>
+      <form id="form-signup">
+        <input type="text" id="signup-username" placeholder="Nombre de usuario (username)" required />
+        <div class="row">
+          <input type="number" id="signup-dni" placeholder="DNI" required />
+          <input type="text" id="signup-phonenumber" placeholder="Teléfono" required />
+        </div>
+        <div class="row">
+          <input type="text" id="signup-cuit" placeholder="CUIT" required />
+          <input type="text" id="signup-cuil" placeholder="CUIL" required />
+        </div>
+        <input type="email" id="signup-mail" placeholder="Correo (mail)" required />
+        <input type="text" id="signup-address" placeholder="Dirección" required />
+        <div class="row">
+          <input type="text" id="signup-city" placeholder="Ciudad" value="Salta" required />
+          <input type="text" id="signup-province" placeholder="Provincia" value="Salta" required />
+        </div>
+        <div class="row">
+          <select id="signup-role">
+            <option value="administrativo">Administrativo</option>
+            <option value="operativo">Operativo</option>
+          </select>
+          <select id="signup-type">
+            <option value="admin">Admin</option>
+            <option value="user">User</option>
+          </select>
+        </div>
+        <button type="submit">Crear Usuario</button>
+      </form>
+    </div>
+
+    <!-- 2. LOGIN: POST /api/users/login -->
+    <div class="card">
+      <h2>2. Iniciar Sesión (`POST /login`)</h2>
+      <form id="form-login">
+        <input type="text" id="login-username" placeholder="Nombre de usuario (username)" required />
+        <input type="email" id="login-mail" placeholder="Correo (mail)" required />
+        <button type="submit" class="btn-green">Ingresar</button>
+      </form>
+    </div>
+
+    <!-- 3. UPDATE: PUT /api/users/update/:dni -->
+    <div class="card">
+      <h2>3. Actualizar por DNI (`PUT /update/:dni`)</h2>
+      <form id="form-update">
+        <input type="number" id="update-target-dni" placeholder="DNI del usuario a editar" required style="border: 2px solid #dd6b20;" />
+        <input type="text" id="update-username" placeholder="Nuevo username" />
+        <div class="row">
+          <input type="number" id="update-dni" placeholder="Nuevo DNI" />
+          <input type="text" id="update-phonenumber" placeholder="Nuevo Teléfono" />
+        </div>
+        <div class="row">
+          <input type="text" id="update-cuit" placeholder="Nuevo CUIT" />
+          <input type="text" id="update-cuil" placeholder="Nuevo CUIL" />
+        </div>
+        <input type="email" id="update-mail" placeholder="Nuevo mail" />
+        <input type="text" id="update-address" placeholder="Nueva dirección" />
+        <div class="row">
+          <input type="text" id="update-city" placeholder="Ciudad" />
+          <input type="text" id="update-province" placeholder="Provincia" />
+        </div>
+        <div class="row">
+          <select id="update-role">
+            <option value="administrativo">Administrativo</option>
+            <option value="operativo">Operativo</option>
+          </select>
+          <select id="update-type">
+            <option value="admin">Admin</option>
+            <option value="user">User</option>
+          </select>
+        </div>
+        <button type="submit" class="btn-orange">Actualizar Datos</button>
+      </form>
+    </div>
+
+    <!-- 4. DELETE: DELETE /api/users/delete/:dni -->
+    <div class="card">
+      <h2>4. Eliminar por DNI (`DELETE /delete/:dni`)</h2>
+      <form id="form-delete">
+        <input type="number" id="delete-dni" placeholder="DNI del usuario a borrar" required />
+        <button type="submit" class="btn-red">Eliminar Usuario</button>
+      </form>
+    </div>
+
+  </div>
+
+  <br>
+
+  <!-- 5. GET ALL: GET /api/users/ -->
+  <div style="max-width: 1300px; margin: 0 auto;">
+    <div class="card">
+      <h2>5. Listado General (`GET /`)</h2>
+      <button onclick="getAllUsers()" class="btn-gray">🔄 Cargar / Actualizar Lista</button>
+      <pre class="list-box" id="users-output">Hacé clic en el botón superior para obtener todos los usuarios...</pre>
+    </div>
+  </div>
+
+  <script>
+    const API_URL = 'http://localhost:3000/api/users';
+
+    // Función auxiliar para peticiones HTTP
+    async function sendRequest(url, method, bodyData = null) {
+      try {
+        const options = {
+          method,
+          headers: { 'Content-Type': 'application/json' }
+        };
+        if (bodyData) options.body = JSON.stringify(bodyData);
+
+        const response = await fetch(url, options);
+        const data = await response.json();
+
+        if (!response.ok) {
+          alert(`❌ Error (${response.status}): ${data.message || JSON.stringify(data)}`);
+        } else {
+          alert('✅ Operación exitosa');
+          getAllUsers();
+        }
+        return data;
+      } catch (error) {
+        alert('❌ Error de conexión con el servidor backend');
+        console.error(error);
+      }
+    }
+
+    // 1. GET ALL USERS
+    async function getAllUsers() {
+      const output = document.getElementById('users-output');
+      output.innerText = 'Cargando usuarios...';
+      try {
+        const res = await fetch(API_URL);
+        const users = await res.json();
+        output.innerText = JSON.stringify(users, null, 2);
+      } catch (err) {
+        output.innerText = 'Error al cargar la lista de usuarios.';
+      }
+    }
+
+    // 2. SIGNUP
+    document.getElementById('form-signup').addEventListener('submit', (e) => {
+      e.preventDefault();
+      sendRequest(`${API_URL}/signup`, 'POST', {
+        username: document.getElementById('signup-username').value,
+        dni: Number(document.getElementById('signup-dni').value),
+        cuit: document.getElementById('signup-cuit').value,
+        cuil: document.getElementById('signup-cuil').value,
+        phonenumber: document.getElementById('signup-phonenumber').value,
+        address: document.getElementById('signup-address').value,
+        city: document.getElementById('signup-city').value,
+        province: document.getElementById('signup-province').value,
+        mail: document.getElementById('signup-mail').value,
+        role: document.getElementById('signup-role').value,
+        type: document.getElementById('signup-type').value
+      });
+      e.target.reset();
+    });
+
+    // 3. LOGIN
+    document.getElementById('form-login').addEventListener('submit', (e) => {
+      e.preventDefault();
+      sendRequest(`${API_URL}/login`, 'POST', {
+        username: document.getElementById('login-username').value,
+        mail: document.getElementById('login-mail').value
+      });
+    });
+
+    // 4. UPDATE USER BY DNI
+    document.getElementById('form-update').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const targetDni = document.getElementById('update-target-dni').value;
+
+      sendRequest(`${API_URL}/update/${targetDni}`, 'PUT', {
+        username: document.getElementById('update-username').value,
+        dni: Number(document.getElementById('update-dni').value),
+        cuit: document.getElementById('update-cuit').value,
+        cuil: document.getElementById('update-cuil').value,
+        phonenumber: document.getElementById('update-phonenumber').value,
+        address: document.getElementById('update-address').value,
+        city: document.getElementById('update-city').value,
+        province: document.getElementById('update-province').value,
+        mail: document.getElementById('update-mail').value,
+        role: document.getElementById('update-role').value,
+        type: document.getElementById('update-type').value
+      });
+    });
+
+    // 5. DELETE USER BY DNI
+    document.getElementById('form-delete').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const dni = document.getElementById('delete-dni').value;
+      if (confirm(`¿Seguro que querés eliminar al usuario con DNI ${dni}?`)) {
+        sendRequest(`${API_URL}/delete/${dni}`, 'DELETE');
+        e.target.reset();
+      }
+    });
+
+    // Carga inicial
+    getAllUsers();
+  </script>
+</body>
+</html>

@@ -1,4 +1,4 @@
-import {User} from '../models/Users';
+import {Users} from '../models'
 
 interface GetUserFilters {
     username?: string;
@@ -20,13 +20,13 @@ async function createUser(filters: GetUserFilters) {
     const oldUser: { dni?: string; mail?: string; username?: string } = {};
     
     try {
-        const dniExist = await User.findOne({
+        const dniExist = await Users.findOne({
             where: { dni: filters.dni,}})
 
-        const mailExist = await User.findOne({
+        const mailExist = await Users.findOne({
             where: { mail: filters.mail,}})
 
-        const usernameExist = await User.findOne({
+        const usernameExist = await Users.findOne({
             where: { username: filters.username,}})
 
         if (dniExist) oldUser.dni = "dni repetido";
@@ -37,7 +37,7 @@ async function createUser(filters: GetUserFilters) {
             return oldUser;
         }
         
-        const newUser = await User.create({
+        const newUser = await Users.create({
             username: filters.username, 
             dni: filters.dni,
             cuit: filters.cuit,
@@ -60,7 +60,7 @@ async function createUser(filters: GetUserFilters) {
 
 async function getAllUsers() {
     try {
-        const users = await User.findAll();
+        const users = await Users.findAll();
         return users;
     } catch (error) {
         console.error('Error fetching users:', error);
@@ -72,7 +72,7 @@ async function getUser(filters: GetUserFilters) {
     try {
         console.log("me llego esta data a userServices", filters.username, filters.mail)
         
-        const user = await User.findOne({
+        const user = await Users.findOne({
             where: {username: filters.username,mail: filters.mail}
         });
 
@@ -86,7 +86,7 @@ async function getUser(filters: GetUserFilters) {
 
 async function updateUser(dni: string, filters: GetUserFilters) {
     try {
-        const user = await User.findOne({ where: { dni } });
+        const user = await Users.findOne({ where: { dni } });
 
         if (!user) {
             return null;
@@ -114,7 +114,7 @@ async function updateUser(dni: string, filters: GetUserFilters) {
 
 async function deleteUser(dni: string) {
     try {
-        const user = await User.findOne({ where: { dni } });
+        const user = await Users.findOne({ where: { dni } });
 
         if (!user) {
             return null;
