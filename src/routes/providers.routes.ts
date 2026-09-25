@@ -4,18 +4,14 @@ import { ProvidersControllers } from "../controllers/providers.controllers";
 
 const router = express.Router();
 
-router.get("/", (req: express.Request, res: express.Response) => {
-  res.send({message: "Estoy en providers.routes!"});
-});
-
 router.get("/", ProvidersControllers.getAllProviders);
 
-router.post("/add-provider", ProvidersControllers.createProvider);
+router.post("/provider-add", ProvidersControllers.createProvider);
 
-router.get("/get-provider/:id", ProvidersControllers.getProvider);
+router.get("/provider-get/:id", ProvidersControllers.getProvider);
 
-router.put("/update/edit-provider/:id", ProvidersControllers.updateProvider);
+router.put("/provider-edit/:id", ProvidersControllers.updateProvider);
 
-router.delete("/delete-provider/:id", ProvidersControllers.deleteProvider);
+router.delete("/provider-delete/:id", ProvidersControllers.deleteProvider);
 
 export default router;
