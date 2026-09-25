@@ -172,7 +172,7 @@
     // 2. SIGNUP
     document.getElementById('form-signup').addEventListener('submit', (e) => {
       e.preventDefault();
-      sendRequest(`${API_URL}/signup`, 'POST', {
+      sendRequest(`${API_URL}/users-add`, 'POST', {
         username: document.getElementById('signup-username').value,
         dni: Number(document.getElementById('signup-dni').value),
         cuit: document.getElementById('signup-cuit').value,
@@ -202,7 +202,7 @@
       e.preventDefault();
       const targetDni = document.getElementById('update-target-dni').value;
 
-      sendRequest(`${API_URL}/update/${targetDni}`, 'PUT', {
+      sendRequest(`${API_URL}/users-update/${targetDni}`, 'PUT', {
         username: document.getElementById('update-username').value,
         dni: Number(document.getElementById('update-dni').value),
         cuit: document.getElementById('update-cuit').value,

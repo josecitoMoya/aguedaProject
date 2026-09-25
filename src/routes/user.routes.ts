@@ -6,14 +6,14 @@ const router = express.Router();
 
 router.get("/", UserController.getAllUsers);
 
-router.post("/login", UserController.loginUser);
+router.post("/users-login", UserController.loginUser);
 
-router.post("/signup", UserController.createUser);
+router.post("/users-add", UserController.createUser);
 
-router.get("/:id", UserController.getUser);
+router.get("/users-get/:id", UserController.getUser);
 
-router.put("/update/:dni", UserController.updateUser);
+router.put("/users-update/:id", UserController.updateUser);
 
-router.delete("/delete/:dni", UserController.deleteUser);
+router.delete("/users-delete/:id", UserController.deleteUser);
 
 export default router;

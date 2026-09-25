@@ -1,8 +1,9 @@
 ### GET - Probar ruta
-GET http://localhost:3000/api/users
+GET http://localhost:3000/api
 
+######################## USUARIOS ########################
 ### POST - Crear usuario
-POST http://localhost:3000/api/users/signup
+POST http://localhost:3000/api/users/users-add
 Content-Type: application/json
 
 {
@@ -20,19 +21,25 @@ Content-Type: application/json
 }
 
 ### POST - Login
-POST http://localhost:3000/api/users/login
+POST http://localhost:3000/api/users/users-login
 Content-Type: application/json
+
 {
 "username": "jose_moya",
 "mail": "jose_moya@example.com"
 }
 
-#### PUT - Actualizar usuario
-PUT http://localhost:3000/api/users/update/78257895
+### POST - Obtener usuario
+GET  http://localhost:3000/api/users/users-get/1
+Content-Type: application/json
+
+
+### PUT - Actualizar usuario
+PUT http://localhost:3000/api/users/users-update/1
 Content-Type: application/json  
 
 {
-  "username": "el javi",
+"username": "el javi",
 "dni": 78257895,
 "cuit": "27268989191",
 "cuil": "27268989191",
@@ -43,7 +50,51 @@ Content-Type: application/json
 "mail": "c@c.com",
 "role": "administrativo",
 "type": "admin"
-  }
+}
 
 ### DELETE - Eliminar usuario
-DELETE http://localhost:3000/api/users/delete/31948312
+DELETE http://localhost:3000/api/users/users-delete/1
+
+
+######################## PROVEEDORES ########################
+
+### POST - Crear proveedor
+POST http://localhost:3000/api/providers/provider-add
+Content-Type: application/json
+
+{
+"razonSocial": "test proveedor",
+"cuit": "20127125466",
+"address": "Los Pomelos 101",
+"city": "Salta",
+"province": "Salta",
+"phonenumber": "3874181313",
+"mail": "c@c.com.ar",
+"categoryId": "1"
+}
+
+### GET - Obtener todos los proveedores
+GET http://localhost:3000/api/providers
+Content-Type: application/json  
+
+### GET - Obtener un proveedore
+GET http://localhost:3000/api/providers/provider-get/1
+Content-Type: application/json  
+
+### PUT - Actualizar proveedor
+PUT http://localhost:3000/api/providers/provider-edit/1
+Content-Type: application/json  
+
+{
+"razonSocial": "JOSE MOYA PAS",
+"cuit": "2031948312",
+"address": "Los Pomelos 101",
+"city": "Salta",
+"province": "Salta",
+"phonenumber": "3876109748",
+"mail": "jose_moya@live.com.ar",
+"categoryId": "1"
+}
+
+### DELETE - Eliminar proveedor
+DELETE http://localhost:3000/api/providers/provider-delete/2

@@ -88,7 +88,6 @@ async function getAllUsers() {
 
 async function getUser(filters: GetUserFilters) {
     try {
-        console.log("me llego esta data a userServices", filters.username, filters.password)
         
         const user = await Users.findOne({
             where: {id: filters.id}
@@ -102,9 +101,9 @@ async function getUser(filters: GetUserFilters) {
     }
 }
 
-async function updateUser(dni: string, filters: GetUserFilters) {
+async function updateUser(id: number, filters: GetUserFilters) {
     try {
-        const user = await Users.findOne({ where: { dni } });
+        const user = await Users.findOne({ where: { id } });
 
         if (!user) {
             return null;
@@ -130,9 +129,9 @@ async function updateUser(dni: string, filters: GetUserFilters) {
     }
 }
 
-async function deleteUser(dni: string) {
+async function deleteUser(id: number) {
     try {
-        const user = await Users.findOne({ where: { dni } });
+        const user = await Users.findOne({ where: { id } });
 
         if (!user) {
             return null;
@@ -147,6 +146,7 @@ async function deleteUser(dni: string) {
 }
 
 export const UserService = {
+    loginUser,
     createUser,
     getAllUsers,
     getUser,

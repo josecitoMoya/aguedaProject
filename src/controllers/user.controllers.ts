@@ -60,10 +60,10 @@ async function getUser(req: Request, res: Response): Promise<void> {
 
 async function updateUser(req: Request, res: Response): Promise<void> {
     try {
-        const { dni } = req.params as { dni: string };
+        const { id } = req.params as { id: string };
         const { username, cuit, cuil, phonenumber, address, city, province, mail, role, type } = req.body;
 
-        const updatedUser = await UserService.updateUser(dni, { username, cuit, cuil, phonenumber, address, city, province, mail, role, type });
+        const updatedUser = await UserService.updateUser(parseInt(id), { username, cuit, cuil, phonenumber, address, city, province, mail, role, type });
 
         !updatedUser ? res.status(404).json({ message: 'User not found' }) : res.status(200).json(updatedUser);
     } 
@@ -76,9 +76,9 @@ async function updateUser(req: Request, res: Response): Promise<void> {
 
 async function deleteUser(req: Request, res: Response): Promise<void> {
     try {
-        const { dni } = req.params as { dni: string };
+        const { id } = req.params as { id: string };
 
-        const deletedUser = await UserService.deleteUser(dni);
+        const deletedUser = await UserService.deleteUser(parseInt(id));
 
         !deletedUser ? res.status(404).json({ message: 'User not found' }) : res.status(200).json({ message: 'User deleted successfully' });
     } 
