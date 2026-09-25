@@ -1,8 +1,14 @@
-import {DataTypes} from 'sequelize';
+import { DataTypes, Model, Optional } from 'sequelize';
+import { dataBase } from '../database/index';
 
-import {dataBase} from '../database/index';
+interface CategoriesAttributes {
+    id: number;
+    name: string;
+}
 
-export const Categories = dataBase.define('Categories', {
+interface CategoriesCreationAttributes extends Optional<CategoriesAttributes, 'id'> {}
+
+export const Categories = dataBase.define<Model<CategoriesAttributes, CategoriesCreationAttributes>>('Categories', {
     id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
@@ -12,4 +18,4 @@ export const Categories = dataBase.define('Categories', {
         type: DataTypes.STRING,
         allowNull: false
     }
-})
+});

@@ -1,28 +1,26 @@
-import {Request, Response} from 'express';
-import { CategoriesServices } from '../services/Categories.services';
+import { Request, Response } from 'express';
 
-interface GetCategoriesFilters {
-    id?: number;
-    name: string
-}
-
-interface CategoriesData {
-    id?: number;
-    name: string
-}
+import { CategoriesServices, CategoriesData } from '../services/categories.services';
 
 async function createCategory(req: Request, res: Response): Promise<void> {
     try {
         const { name } = req.body;
 
         const newCategory = await CategoriesServices.createCategory({
-            id,
             name
         } as CategoriesData);
 
-        if(!newCategory.success) res.status(201).json(newCategory.errors)
+        if (!newCategory.success) {
+            res.status(201).json(newCategory.errors);
+            return; 
+        }
 
-        res.status(200).json({Status: newCategory.success, Message: `Category ${newCategory.data?.name} created` })
+        const categoryPlain = newCategory.data?.get({ plain: true });
+
+        res.status(200).json({ 
+            Status: newCategory.success, 
+            Message: `Category ${categoryPlain?.name} created` 
+        });
     }
     
     catch (error) {
@@ -41,13 +39,21 @@ async function getAllCategories(req: Request, res: Response): Promise<void> {
     }
 }
 
+/**
+ * Controlador para obtener una categoría específica por su ID.
+ */
 async function getCategory(req: Request, res: Response): Promise<void> {
     try {
-        const { id } = req.params as {id: string};
+        const { id } = req.params as { id: string };
 
         const category = await CategoriesServices.getCategory({ id: parseInt(id) });
 
-        !category ? res.status(404).json({ message: 'Category not found' }) : res.status(200).json(category);
+        if (!category) {
+            res.status(404).json({ message: 'Category not found' });
+            return;
+        }
+
+        res.status(200).json(category);
     } 
     
     catch (error) {
@@ -55,34 +61,55 @@ async function getCategory(req: Request, res: Response): Promise<void> {
     }
 }
 
+/**
+ * Controlador para actualizar una categoría por su ID.
+ */
 async function updateCategory(req: Request, res: Response): Promise<void> {
     try {
-        const { id } = req.params as {id: string};
-        
-        const { razonSocial, cuit, address, city, province, phoneNumber, mail } = req.body;
+        const { id } = req.params as { id: string };
+        const { name } = req.body;
 
-        const updatedCategory = await CategoriesServices.updateCategory(parseInt(id), { razonSocial, cuit, address, city, province, mail, phoneNumber });
+        const updatedCategory = await CategoriesServices.updateCategory(parseInt(id), { name });
 
-        !updatedCategory ? res.status(404).json({ message: 'Category not found' }) : res.status(200).json(updatedCategory);
+        if (!updatedCategory) {
+            res.status(404).json({ message: 'Category not found' });
+            return;
+        }
+
+        res.status(200).json(updatedCategory);
     }
     
     catch (error) {
-        res.status(500).json({ message: 'Error al actualizar el proveedor', error });
+        res.status(500).json({ message: 'Error al actualizar la categoria', error });
     }
 }
 
+/**
+ * Controlador para eliminar una categoría por su ID.
+ */
 async function deleteCategory(req: Request, res: Response): Promise<void> {
     try {
-        const { id } = req.params as {id: string};
+        const { id } = req.params as { id: string };
 
-        const deletedCategory = await CategoriesService.deleteCategory(parseInt(id));
+        const deletedCategory = await CategoriesServices.deleteCategory(parseInt(id));
 
-        !deletedCategory ? res.status(404).json({ message: 'Category not found' }) : res.status(200).json({ message: 'Category deleted successfully' });
+        if (!deletedCategory) {
+            res.status(404).json({ message: 'Category not found' });
+            return;
+        }
+
+        res.status(200).json({ message: 'Category deleted successfully' });
     }
     
     catch (error) {
-        res.status(500).json({ message: 'Error al eliminar el proveedor', error });
+        res.status(500).json({ message: 'Error al eliminar la categoria', error });
     }
 }
 
-export const CategoriesControllers = { createCategory, getAllCategories, getCategory, updateCategory, deleteCategory };    
+export const CategoriesControllers = { 
+    createCategory, 
+    getAllCategories, 
+    getCategory, 
+    updateCategory, 
+    deleteCategory 
+};
