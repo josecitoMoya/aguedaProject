@@ -21,9 +21,9 @@ async function createUser(req: Request, res: Response): Promise<void> {
 
 async function loginUser(req: Request, res: Response): Promise<void> {
     try {
-        const { username, password } = req.body;
+        const { username } = req.body 
 
-        const user = await UserService.getUser({ username, password });
+        const user = await UserService.loginUser(username);
 
         !user ? res.status(404).json({ message: 'User not found' }) : res.status(200).json(user);
     } 
@@ -48,7 +48,7 @@ async function getUser(req: Request, res: Response): Promise<void> {
     try {
         const { id } = req.params as { id: string };
 
-        const user = await UserService.getUser({ id: parseInt(id) });
+        const user = await UserService.getUser(parseInt(id));
 
         !user ? res.status(404).json({ message: 'User not found' }) : res.status(200).json(user);
     } 

@@ -1,15 +1,15 @@
-import { Users } from "./Users";
+import { User } from "./Users";
 import { Categories } from "./Categories";
 import { Expenses } from "./Expenses";
-import { Providers } from "./Providers";
+import { Provider } from "./Providers";
 
-Users.hasMany(Expenses, { foreignKey: "userId" });
-Expenses.belongsTo(Users, { foreignKey: "userId" });
+User.hasMany(Expenses, { foreignKey: "userId" });
+Expenses.belongsTo(User, { foreignKey: "userId" });
 
 Categories.hasMany(Expenses, { foreignKey: "categoryId" });
 Expenses.belongsTo(Categories, { foreignKey: "categoryId" });
 
-Providers.hasMany(Expenses, { foreignKey: "providerId" });
-Expenses.belongsTo(Providers, { foreignKey: "providerId" });
+Provider.hasMany(Expenses, { foreignKey: "providerId" });
+Expenses.belongsTo(Provider, { foreignKey: "providerId" });
 
-export { Users, Expenses, Categories, Providers };   
+export { User, Expenses, Categories, Provider };   

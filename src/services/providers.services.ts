@@ -1,4 +1,4 @@
-import { Providers } from '../models'
+import { Provider } from '../models'
 
 interface GetProviderFilters {
     id?: number;
@@ -30,10 +30,10 @@ async function createProvider(data: ProviderData) {
     const errors: Record<string, string> = {};
 
     try {
-        const cuitExist = await Providers.findOne({ where: { cuit: data.cuit } });
+        const cuitExist = await Provider.findOne({ where: { cuit: data.cuit } });
         if (cuitExist) errors.cuit = "CUIT repetido";
 
-        const razonSocialExist = await Providers.findOne({ where: { razonSocial: data.razonSocial } });
+        const razonSocialExist = await Provider.findOne({ where: { razonSocial: data.razonSocial } });
         if (razonSocialExist) errors.razonSocial = "Razón social repetida";
 
         if (Object.keys(errors).length > 0) {
@@ -43,7 +43,7 @@ async function createProvider(data: ProviderData) {
             };
         }
         
-        const newProvider = await Providers.create(data);
+        const newProvider = await Provider.create(data);
 
         return {
             success: true,
@@ -58,7 +58,7 @@ async function createProvider(data: ProviderData) {
 
 async function getAllProviders() {
     try {
-        const providers = await Providers.findAll();
+        const providers = await Provider.findAll();
         return providers;
     } catch (error) {
         console.error('Error fetching providers:', error);
@@ -69,7 +69,7 @@ async function getAllProviders() {
 async function getProvider(filters: GetProviderFilters) {
     try {
 
-        const provider = await Providers.findOne({
+        const provider = await Provider.findOne({
             where: {id: filters.id}
         });
 
@@ -83,7 +83,7 @@ async function getProvider(filters: GetProviderFilters) {
 
 async function updateProvider(id: number, filters: GetProviderFilters) {
     try {
-        const provider = await Providers.findOne({ where: { id } });
+        const provider = await Provider.findOne({ where: { id } });
 
         console.log("SOY PROVIDER", provider)
 
@@ -110,7 +110,7 @@ async function updateProvider(id: number, filters: GetProviderFilters) {
 
 async function deleteProvider(id: number) {
     try {
-        const provider = await Providers.findOne({ where: { id } });
+        const provider = await Provider.findOne({ where: { id } });
 
         if (!provider) {
             return null;

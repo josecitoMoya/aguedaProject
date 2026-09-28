@@ -69,5 +69,3 @@ Provider.init(
     tableName: "Providers",
   }
 );
-
-export const Providers = Provider;
