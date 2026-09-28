@@ -1,8 +1,20 @@
-import { DataTypes } from 'sequelize';
-
+import { Model, DataTypes, InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
 import {dataBase} from '../database/index';
 
-export const Expenses = dataBase.define('Expenses', {
+export class Expenses extends Model<InferAttributes<Expenses>,
+InferCreationAttributes<Expenses>> {
+    declare id: CreationOptional<number>;
+    declare amount: number;
+    declare description: string;
+    declare startDate: number;
+    declare endDate: number;
+    declare categoryId: number;
+    declare providerId: number;
+    declare userId: number;
+}
+
+Expenses.init(
+    {
     id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
@@ -37,4 +49,7 @@ export const Expenses = dataBase.define('Expenses', {
         type: DataTypes.INTEGER,
         allowNull: false
     }
+}, {
+    sequelize: dataBase,
+    tableName: 'Expenses'
 })

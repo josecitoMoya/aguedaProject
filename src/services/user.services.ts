@@ -1,155 +1,124 @@
-import {Users} from '../models'
+import { Op } from 'sequelize';
+import { User } from '../models';
 
-interface GetUserFilters {
-    id?: number;
-    username?: string;
-    dni?: number;
-    cuit?: string;
-    cuil?: string;
-    phonenumber?: string;
-    address?: string;
-    city?: string;
-    province?: string;
-    mail?: string;
-    role?: string;
-    type?: string;
-    password?: string;
+export interface CreateUserInput {
+  username: string;
+  dni: number;
+  cuit: string;
+  cuil: string;
+  phonenumber: string;
+  address: string;
+  city: string;
+  province: string;
+  mail: string;
+  role: string;
+  type: string;
 }
 
+export type UpdateUserInput = Partial<CreateUserInput>;
 
-async function createUser(filters: GetUserFilters) {
-    
-    const oldUser: { dni?: string; mail?: string; username?: string } = {};
-    
-    try {
-        const dniExist = await Users.findOne({
-            where: { dni: filters.dni,}})
+async function createUser(input: CreateUserInput) {
+  const oldUser: { dni?: string; mail?: string; username?: string } = {};
 
-        const mailExist = await Users.findOne({
-            where: { mail: filters.mail,}})
+  try {
+    const existingUsers = await User.findAll({
+      where: {
+        [Op.or]: [
+          { dni: input.dni },
+          { mail: input.mail },
+          { username: input.username }
+        ]
+      }
+    });
 
-        const usernameExist = await Users.findOne({
-            where: { username: filters.username,}})
-
-        if (dniExist) oldUser.dni = "dni repetido";
-        if (mailExist) oldUser.mail = "mail repetido";
-        if (usernameExist) oldUser.username = "username repetido";
-
-        if (Object.keys(oldUser).length > 0) {
-            return oldUser;
-        }
-        
-        const newUser = await Users.create({
-            username: filters.username, 
-            dni: filters.dni,
-            cuit: filters.cuit,
-            cuil: filters.cuil,
-            phonenumber: filters.phonenumber,
-            address: filters.address,
-            city: filters.city,
-            province: filters.province,
-            mail: filters.mail,
-            role: filters.role,
-            type: filters.type
-        })
-
-            return newUser;
-    } catch (error) {
-        console.error('Error creating user:', error);
-        throw new Error('Failed to create user');
+    if (existingUsers.length > 0) {
+      existingUsers.forEach((u) => {
+        if (u.dni === input.dni) oldUser.dni = 'dni repetido';
+        if (u.mail === input.mail) oldUser.mail = 'mail repetido';
+        if (u.username === input.username) oldUser.username = 'username repetido';
+      });
+      return oldUser;
     }
+
+    const newUser = await User.create(input);
+    return newUser;
+
+  } catch (error) {
+    console.error('Error creating user:', error);
+    throw new Error('Failed to create user');
+  }
 }
 
-async function loginUser(filters: GetUserFilters) {
-    try {
-        console.log("me llego esta data a userServices", filters.username, filters.password)
-        
-        const user = await Users.findOne({
-            where: {username: filters.username, password: filters.password}
-        });
+async function loginUser(username: string) {
+  try {
+    const user = await User.findOne({
+      where: { username }
+    });
 
-        return user;
-        
-    } catch (error) {
-        console.error('Error fetching users:', error);
-        throw new Error('Failed to fetch users');
-    }
+    return user;
+  } catch (error) {
+    console.error('Error fetching user for login:', error);
+    throw new Error('Failed to fetch user');
+  }
 }
 
-async function getAllUsers() {
-    try {
-        const users = await Users.findAll();
-        return users;
-    } catch (error) {
-        console.error('Error fetching users:', error);
-        throw new Error('Failed to fetch users');
-    }
+async function getAllUsers(): Promise<User[]> {
+  try {
+    const users = await User.findAll();
+    return users;
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    throw new Error('Failed to fetch users');
+  }
 }
 
-async function getUser(filters: GetUserFilters) {
-    try {
-        
-        const user = await Users.findOne({
-            where: {id: filters.id}
-        });
-
-        return user;
-        
-    } catch (error) {
-        console.error('Error fetching users:', error);
-        throw new Error('Failed to fetch users');
-    }
+async function getUser(id: number): Promise<User | null> {
+  try {
+    const user = await User.findByPk(id);
+    return user;
+  } catch (error) {
+    console.error('Error fetching user:', error);
+    throw new Error('Failed to fetch user');
+  }
 }
 
-async function updateUser(id: number, filters: GetUserFilters) {
-    try {
-        const user = await Users.findOne({ where: { id } });
+async function updateUser(id: number, input: UpdateUserInput): Promise<User | null> {
+  try {
+    const user = await User.findByPk(id);
 
-        if (!user) {
-            return null;
-        }
-
-        await user.update({
-            username: filters.username,
-            cuit: filters.cuit,
-            cuil: filters.cuil,
-            phonenumber: filters.phonenumber,
-            address: filters.address,
-            city: filters.city,
-            province: filters.province,
-            mail: filters.mail,
-            role: filters.role,
-            type: filters.type
-        });
-
-        return user;
-    } catch (error) {
-        console.error('Error updating user:', error);
-        throw new Error('Failed to update user');
+    if (!user) {
+      return null;
     }
+
+    await user.update(input);
+    return user;
+  } catch (error) {
+    console.error('Error updating user:', error);
+    throw new Error('Failed to update user');
+  }
 }
 
-async function deleteUser(id: number) {
-    try {
-        const user = await Users.findOne({ where: { id } });
+async function deleteUser(id: number): Promise<boolean> {
+  try {
+    const user = await User.findByPk(id);
 
-        if (!user) {
-            return null;
-        }
-
-        await user.destroy();
-        return true;
-    } catch (error) {
-        console.error('Error deleting user:', error);
-        throw new Error('Failed to delete user');
+    if (!user) {
+      return false;
     }
+
+    await user.destroy();
+    return true;
+  } catch (error) {
+    console.error('Error deleting user:', error);
+    throw new Error('Failed to delete user');
+  }
 }
 
 export const UserService = {
-    loginUser,
-    createUser,
-    getAllUsers,
-    getUser,
-    updateUser,
-    deleteUser
+  loginUser,
+  createUser,
+  getAllUsers,
+  getUser,
+  updateUser,
+  deleteUser
 };
