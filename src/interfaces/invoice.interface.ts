@@ -1,5 +1,5 @@
 import {InferAttributes, InferCreationAttributes} from 'sequelize'
-import {} from '../models'
+import {Invoice} from '../models'
 
-export type CreateInvoiceInput = InferCreationAttributes<>;
-export type InvoiceFilters = Partial<InferAttributes<>>
+export type CreateInvoiceInput = InferCreationAttributes<Invoice>;
+export type InvoiceFilters = Partial<InferAttributes<Invoice>>
