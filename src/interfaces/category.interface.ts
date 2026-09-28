@@ -1,5 +1,5 @@
 import { InferAttributes, InferCreationAttributes } from 'sequelize';
-import { Categories } from '../models';
+import { Category } from '../models';
 
-export type CreateCategoryInput = InferCreationAttributes<Categories>;
-export type CategoryFilters = Partial<InferAttributes<Categories>>;
+export type CreateCategoryInput = InferCreationAttributes<Category>;
+export type CategoryFilters = Partial<InferAttributes<Category>>;
