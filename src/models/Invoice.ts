@@ -1,9 +1,10 @@
 import {Model, DataTypes, InferAttributes, InferCreationAttributes, CreationOptional} from 'sequelize'
 import { dataBase } from '../database'
 
-export class Invoice extends Model<InferAttributes<Model>,
+export class Invoice extends Model<
+InferAttributes<Model>,
 InferCreationAttributes<Model>> {
-    declare id: CreationOptional<number>;
+    declare id?: CreationOptional<number>;
     declare razonSocial: string;
     declare cuit: string
     declare phoneNumber: string
