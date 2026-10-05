@@ -15,8 +15,7 @@ async function createInvoice(req: Request, res: Response): Promise<void> {
 
         res.status(201).json({ 
             status: newInvoice.success, 
-            message: `Factura ${newInvoice.data?.invoiceNumber} cargada`,
-            data: newInvoice.data
+            message: `Factura ${newInvoice.data} cargada`,
         });
     } catch (error) {
         res.status(500).json({ message: 'Error al crear la factura', error });
@@ -35,14 +34,14 @@ async function getAllInvoices(req: Request, res: Response): Promise<void> {
 async function getInvoice(req: Request, res: Response): Promise<void> {
     try {
 
-        const invoiceId = parseInt(req.params.id as string, 10);
+        const invoiceId = parseInt(req.params.id as string, 10)
 
         if (isNaN(invoiceId)) {
             res.status(400).json({ message: 'ID no válido' });
             return;
         }
 
-        const invoice = await InvoicesServices.getInvoice(invoiceId);
+        const invoice = await InvoicesServices.getInvoice({id: invoiceId});
 
         if (!invoice) {
             res.status(404).json({ message: 'Factura no encontrada' });
@@ -55,63 +54,63 @@ async function getInvoice(req: Request, res: Response): Promise<void> {
     }
 }
 
-// async function updateInvoice(req: Request, res: Response): Promise<void> {
-//     try {
+async function updateInvoice(req: Request, res: Response): Promise<void> {
+    try {
 
-//         const invoiceData = req.body;
+        const invoiceData = req.body;
 
-//         const invoiceId = parseInt(req.params.id as string, 10)
+        const invoiceId = parseInt(req.params.id as string, 10)
 
-//         if (isNaN(invoiceId)) {
-//             res.status(400).json({ message: 'ID no válido' });
-//             return;
-//         }
+        if (isNaN(invoiceId)) {
+            res.status(400).json({ message: 'ID no válido' });
+            return;
+        }
 
-//         if (Object.keys(invoiceData).length === 0) {
-//             res.status(400).json({ message: 'No hay datosde factura para actualizar' });
-//             return;
-//         }
+        if (Object.keys(invoiceData).length === 0) {
+            res.status(400).json({ message: 'No hay datosde factura para actualizar' });
+            return;
+        }
 
-//         const updatedInvoice = await InvoicesServices.updateInvoice(invoiceId, invoiceData);
+        const updatedInvoice = await InvoicesServices.updateInvoice(invoiceId, invoiceData);
 
-//         if (!updatedInvoice) {
-//             res.status(404).json({ message: 'Factura no encontrada' });
-//             return;
-//         }
+        if (!updatedInvoice) {
+            res.status(404).json({ message: 'Factura no encontrada' });
+            return;
+        }
 
-//         res.status(200).json(updatedInvoice);
-//     } catch (error) {
-//         res.status(500).json({ message: 'Error al actualizar la factura', error });
-//     }
-// }
+        res.status(200).json(updatedInvoice);
+    } catch (error) {
+        res.status(500).json({ message: 'Error al actualizar la factura', error });
+    }
+}
 
-// async function deleteInvoice(req: Request, res: Response): Promise<void> {
-//     try {
+async function deleteInvoice(req: Request, res: Response): Promise<void> {
+    try {
 
-//         const invoiceId = parseInt(req.params.id as string, 10);
+        const invoiceId = parseInt(req.params.id as string, 10);
 
-//         if (isNaN(invoiceId)) {
-//             res.status(400).json({ message: 'ID no válido' });
-//             return;
-//         }
+        if (isNaN(invoiceId)) {
+            res.status(400).json({ message: 'ID no válido' });
+            return;
+        }
 
-//         const deletedInvoice = await InvoicesServices.deleteInvoice(invoiceId);
+        const deletedInvoice = await InvoicesServices.deleteInvoice(invoiceId);
 
-//         if (!deletedInvoice) {
-//             res.status(404).json({ message: 'Factura no encontrada' });
-//             return;
-//         }
+        if (!deletedInvoice) {
+            res.status(404).json({ message: 'Factura no encontrada' });
+            return;
+        }
 
-//         res.status(200).json({ message: 'Factura eliminada exitosamente' });
-//     } catch (error) {
-//         res.status(500).json({ message: 'Error al eliminar la factura', error });
-//     }
-// }
+        res.status(200).json({ message: 'Factura eliminada exitosamente' });
+    } catch (error) {
+        res.status(500).json({ message: 'Error al eliminar la factura', error });
+    }
+}
 
 export const InvoicesControllers = { 
     createInvoice, 
     getAllInvoices, 
     getInvoice, 
-    // updateInvoice, 
-    // deleteInvoice 
+    updateInvoice, 
+    deleteInvoice 
 };
