@@ -10,7 +10,7 @@ router.post("/providers-add", ProvidersControllers.createProvider);
 
 router.get("/providers-get/:id", ProvidersControllers.getProvider);
 
-router.put("/providers-edit/:id", ProvidersControllers.updateProvider);
+router.put("/providers-update/:id", ProvidersControllers.updateProvider);
 
 router.delete("/providers-delete/:id", ProvidersControllers.deleteProvider);
 

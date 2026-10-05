@@ -2,8 +2,8 @@ import {Model, DataTypes, InferAttributes, InferCreationAttributes, CreationOpti
 import { dataBase } from '../database'
 
 export class Invoice extends Model<
-InferAttributes<Model>,
-InferCreationAttributes<Model>> {
+InferAttributes<Invoice>,
+InferCreationAttributes<Invoice>> {
     declare id?: CreationOptional<number>;
     declare razonSocial: string;
     declare cuit: string

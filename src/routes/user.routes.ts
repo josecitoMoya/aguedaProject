@@ -12,7 +12,7 @@ router.post("/users-add", UserController.createUser);
 
 router.get("/users-get/:id", UserController.getUser);
 
-router.put("/users-edit/:id", UserController.updateUser);
+router.put("/users-update/:id", UserController.updateUser);
 
 router.delete("/users-delete/:id", UserController.deleteUser);
 

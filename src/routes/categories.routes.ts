@@ -10,7 +10,7 @@ router.post("/categories-add", CategoriesControllers.createCategory);
 
 router.get("/categories-get/:id", CategoriesControllers.getCategory);
 
-router.put("/categories-edit/:id", CategoriesControllers.updateCategory);
+router.put("/categories-update/:id", CategoriesControllers.updateCategory);
 
 router.delete("/categories-delete/:id", CategoriesControllers.deleteCategory);
 
