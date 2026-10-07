@@ -1,7 +1,8 @@
 import { Category } from '../models';
-import { CreateCategoryInput, CategoryFilters } from '../interfaces/category.interface';
+import { CreateCategoryInput, CategoryFilters, UpdateCategoryInput } from '../interfaces/category.interface';
+import { ServiceResponse } from '../interfaces/services.responses';
 
-async function createCategory(input: CreateCategoryInput) {
+async function createCategory(input: CreateCategoryInput): Promise<ServiceResponse<Category>> {
   try {
     const newCategory = await Category.create(input);
     return { success: true, data: newCategory };
@@ -11,60 +12,58 @@ async function createCategory(input: CreateCategoryInput) {
   }
 }
 
-async function getAllCategories(): Promise<Category[]> {
+async function getAllCategories(): Promise<ServiceResponse<Category[]>> {
   try {
-    return await Category.findAll();
+    const categories = await Category.findAll();
+    return { success: true, data: categories };
   } catch (error) {
     console.error('Error fetching categories:', error);
-    throw new Error('Failed to fetch categories');
+    return { success: false, errors: { message: 'Failed to fetch categories' } };
   }
 }
 
-async function getCategory(filters: CategoryFilters): Promise<Category | null> {
+async function getCategory(filters: CategoryFilters): Promise<ServiceResponse<Category | null>> {
   try {
-    if (!filters.id) return null;
-    return await Category.findByPk(filters.id);
+    if (!filters.id) return { success: false, errors: { message: 'Category ID is required' } };
+
+    const category = await Category.findByPk(filters.id);
+    return { success: true, data: category };
   } catch (error) {
     console.error('Error fetching category:', error);
-    throw new Error('Failed to fetch category');
+    return { success: false, errors: { message: 'Failed to fetch category' } };
   }
 }
 
-async function updateCategory(id: number, data: CategoryFilters): Promise<Category | null> {
+async function updateCategory(id: number, data: UpdateCategoryInput): Promise<ServiceResponse<Category>> {
   try {
     const category = await Category.findByPk(id);
 
-    if (!category) return null;
+    if (!category) return { success: false, errors: { message: 'Category not found' } };
 
     await category.update(data);
 
-    return category;
-
-  } 
-  
-  catch (error) {
-  
+    return { success: true, data: category };
+  } catch (error) {
     console.error('Error updating category:', error);
-  
-    throw new Error('Failed to update category');
+    return { success: false, errors: { message: 'Failed to update category' } };
   }
-  
 }
 
-async function deleteCategory(id: number): Promise<boolean> {
+async function deleteCategory(id: number): Promise<ServiceResponse<boolean>> {
   try {
     const category = await Category.findByPk(id);
-    if (!category) return false;
+
+    if (!category) return { success: false, errors: { message: 'Category not found' } };
 
     await category.destroy();
-    return true;
+    return { success: true, data: true };
   } catch (error) {
     console.error('Error deleting category:', error);
-    throw new Error('Failed to delete category');
+    return { success: false, errors: { message: 'Failed to delete category' } };
   }
 }
 
-export const CategoryService = {
+export const CategoryServices = {
   createCategory,
   getAllCategories,
   getCategory,

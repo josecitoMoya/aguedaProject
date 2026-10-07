@@ -3,3 +3,4 @@ import { Category } from '../models';
 
 export type CreateCategoryInput = InferCreationAttributes<Category>;
 export type CategoryFilters = Partial<InferAttributes<Category>>;
+export type UpdateCategoryInput = Partial<InferAttributes<Category>>;

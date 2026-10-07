@@ -1,84 +1,78 @@
-import {Invoice} from '../models'
-import { CreateInvoiceInput, InvoiceFilters } from '../interfaces/invoice.interface';
+import { Invoice } from '../models';
+import { CreateInvoiceInput, InvoiceFilters, UpdateInvoiceInput } from '../interfaces/invoice.interface';
+import { ServiceResponse } from '../interfaces/services.responses';
 
-async function createInvoice(input: CreateInvoiceInput) {
+async function createInvoice(input: CreateInvoiceInput): Promise<ServiceResponse<string>> {
+  try {
+    const repeated = await Invoice.findOne({ where: { invoiceNumber: input.invoiceNumber } });
 
-    try{
-        const repitedInvoice = await Invoice.findOne({where: { invoiceNumber:input.invoiceNumber}})
-
-        if(!repitedInvoice) {
-            const newInvoice = await Invoice.create(input);
-            return {success: true, data: input.invoiceNumber}
-        }
-
-        return {success: false, errors: {message: `La factura ${input.invoiceNumber} ya fue cargada`}}
+    if (repeated) {
+      return { success: false, errors: { message: `La factura ${input.invoiceNumber} ya fue cargada` } };
     }
-    catch(error){
-        return {success: false, errors: {message: 'Error en la carga de la factura'}}
-    }
+
+    await Invoice.create(input);
+    return { success: true, data: input.invoiceNumber };
+  } catch (error) {
+    console.error('Error creating invoice:', error);
+    return { success: false, errors: { message: 'Error en la carga de la factura' } };
+  }
 }
 
-async function getAllInvoices(): Promise<Invoice[]> {
-    try{
-        return await Invoice.findAll()
-    }
-    catch(error){
-        console.error('Error fetching invoices:', error)
-        throw new Error('Failed to fetch categories');
-    }
+async function getAllInvoices(): Promise<ServiceResponse<Invoice[]>> {
+  try {
+    const invoices = await Invoice.findAll();
+    return { success: true, data: invoices };
+  } catch (error) {
+    console.error('Error fetching invoices:', error);
+    return { success: false, errors: { message: 'Failed to fetch invoices' } };
+  }
 }
 
-async function getInvoice(filters: InvoiceFilters): Promise<Invoice | null> {
-    try{
-        const { id } = filters;
-        console.log(id)
+async function getInvoice(filters: InvoiceFilters): Promise<ServiceResponse<Invoice | null>> {
+  try {
+    if (!filters.id) return { success: false, errors: { message: 'Invoice ID is required' } };
 
-        if(!id) return null;
-        return await Invoice.findByPk(id)
-    }
-    catch(error){
-        console.error('Error fetching invoice:', error)
-        throw new Error('Failed to fetch invoice');
-    }
+    const invoice = await Invoice.findByPk(filters.id);
+    return { success: true, data: invoice };
+  } catch (error) {
+    console.error('Error fetching invoice:', error);
+    return { success: false, errors: { message: 'Failed to fetch invoice' } };
+  }
 }
 
-async function updateInvoice(id: number, data: InvoiceFilters): Promise<Invoice | null> {
-    try {
-        const invoice = await Invoice.findByPk(id);
+async function updateInvoice(id: number, data: UpdateInvoiceInput): Promise<ServiceResponse<Invoice>> {
+  try {
+    const invoice = await Invoice.findByPk(id);
 
-        if(!invoice) return null;
+    if (!invoice) return { success: false, errors: { message: 'Invoice not found' } };
 
-        await invoice.update(data)
+    await invoice.update(data);
 
-        return invoice;
-       }
-    catch (error) {
-        console.error('Error updating invoice:', error);
-
-        throw new Error('Failed to update invoice');
-    }
+    return { success: true, data: invoice };
+  } catch (error) {
+    console.error('Error updating invoice:', error);
+    return { success: false, errors: { message: 'Failed to update invoice' } };
+  }
 }
 
-async function deleteInvoice(id: number): Promise<boolean> {
-    try {
-        const invoice = await Invoice.findByPk(id);
+async function deleteInvoice(id: number): Promise<ServiceResponse<boolean>> {
+  try {
+    const invoice = await Invoice.findByPk(id);
 
-        if(!invoice) return false;
+    if (!invoice) return { success: false, errors: { message: 'Invoice not found' } };
 
-        await invoice.destroy();
-        return true;
-    }
-
-    catch(error) {
-        console.error('Error deleting invoice:', error);
-        throw new Error('Failed to delete invoice');
-    }
+    await invoice.destroy();
+    return { success: true, data: true };
+  } catch (error) {
+    console.error('Error deleting invoice:', error);
+    return { success: false, errors: { message: 'Failed to delete invoice' } };
+  }
 }
 
 export const InvoicesServices = {
-    createInvoice,
-    getAllInvoices,
-    getInvoice,
-    updateInvoice,
-    deleteInvoice
-}
+  createInvoice,
+  getAllInvoices,
+  getInvoice,
+  updateInvoice,
+  deleteInvoice,
+};
