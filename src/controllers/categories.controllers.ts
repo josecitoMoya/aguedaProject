@@ -1,115 +1,108 @@
 import { Request, Response } from 'express';
-import { CategoryService } from '../services/categories.services';
+import { CategoryServices } from '../services/categories.services';
 import { CreateCategoryInput } from '../interfaces/category.interface';
 
-async function createCategory(req: Request, res: Response): Promise<void> {
-    try {
-        const { name } = req.body as CreateCategoryInput;
+async function createCategory(req: Request, res: Response) {
+  try {
+    const result = await CategoryServices.createCategory(req.body);
 
-        const newCategory = await CategoryService.createCategory({ name });
-
-        if (!newCategory.success) {
-            res.status(400).json(newCategory.errors);
-            return; 
-        }
-
-        res.status(201).json({ 
-            status: newCategory.success, 
-            message: `Category ${newCategory.data?.name} created`,
-            data: newCategory.data
-        });
-    } catch (error) {
-        res.status(500).json({ message: 'Error al crear la categoría', error });
+    if (!result.success) {
+      return res.status(400).json(result.errors);
     }
+
+    return res.status(201).json({
+      status: result.success,
+      message: `Category ${result.data?.name} created`,
+      data: result.data
+    });
+
+  } catch (error) {
+    return res.status(500).json({ message: 'Error al crear la categoría', error });
+  }
 }
 
-async function getAllCategories(req: Request, res: Response): Promise<void> {
-    try {
-        const categories = await CategoryService.getAllCategories();
-        res.status(200).json(categories);
-    } catch (error) {
-        res.status(500).json({ message: 'Error al obtener las categorías', error });
+async function getAllCategories(req: Request, res: Response) {
+  try {
+    const result = await CategoryServices.getAllCategories();
+
+    if (!result.success) {
+      return res.status(400).json(result.errors);
     }
+
+    return res.status(200).json(result.data);
+
+  } catch (error) {
+    return res.status(500).json({ message: 'Error al obtener las categorías', error });
+  }
 }
 
-async function getCategory(req: Request, res: Response): Promise<void> {
-    try {
-        const { id } = req.params
+async function getCategory(req: Request, res: Response) {
+  try {
+    const id = Number(req.params.id);
 
-        const categoryId = parseInt(id as string, 10);
-
-        if (isNaN(categoryId)) {
-            res.status(400).json({ message: 'ID no válido' });
-            return;
-        }
-
-        const category = await CategoryService.getCategory({ id: categoryId });
-
-        if (!category) {
-            res.status(404).json({ message: 'Category not found' });
-            return;
-        }
-
-        res.status(200).json(category);
-    } catch (error) {
-        res.status(500).json({ message: 'Error al obtener la categoría', error });
+    if (isNaN(id)) {
+      return res.status(400).json({ message: 'ID no válido' });
     }
+
+    const result = await CategoryServices.getCategory({ id });
+
+    if (!result.success) {
+      return res.status(404).json(result.errors);
+    }
+
+    return res.status(200).json(result.data);
+
+  } catch (error) {
+    return res.status(500).json({ message: 'Error al obtener la categoría', error });
+  }
 }
 
-async function updateCategory(req: Request, res: Response): Promise<void> {
-    try {
-        const { id } = req.params
+async function updateCategory(req: Request, res: Response) {
+  try {
+    const id = Number(req.params.id);
 
-        const { name } = req.body;
-
-        const categoryId = parseInt(id as string, 10)
-
-        if (isNaN(categoryId)) {
-            res.status(400).json({ message: 'ID no válido' });
-            return;
-        }
-
-        const updatedCategory = await CategoryService.updateCategory(categoryId, { name });
-
-        if (!updatedCategory) {
-            res.status(404).json({ message: 'Category not found' });
-            return;
-        }
-
-        res.status(200).json(updatedCategory);
-    } catch (error) {
-        res.status(500).json({ message: 'Error al actualizar la categoría', error });
+    if (isNaN(id)) {
+      return res.status(400).json({ message: 'ID no válido' });
     }
+
+    const result = await CategoryServices.updateCategory(id, req.body);
+
+    if (!result.success) {
+      return res.status(404).json(result.errors);
+    }
+
+    return res.status(200).json(result.data);
+
+  } catch (error) {
+    return res.status(500).json({ message: 'Error al actualizar la categoría', error });
+  }
 }
 
-async function deleteCategory(req: Request, res: Response): Promise<void> {
-    try {
-        const { id } = req.params;
+async function deleteCategory(req: Request, res: Response) {
+  try {
+    const id = Number(req.params.id);
 
-        const categoryId = parseInt(id as string, 10);
-
-        if (isNaN(categoryId)) {
-            res.status(400).json({ message: 'ID no válido' });
-            return;
-        }
-
-        const deletedCategory = await CategoryService.deleteCategory(categoryId);
-
-        if (!deletedCategory) {
-            res.status(404).json({ message: 'Category not found' });
-            return;
-        }
-
-        res.status(200).json({ message: 'Category deleted successfully' });
-    } catch (error) {
-        res.status(500).json({ message: 'Error al eliminar la categoría', error });
+    if (isNaN(id)) {
+      return res.status(400).json({ message: 'ID no válido' });
     }
+
+    const result = await CategoryServices.deleteCategory(id);
+
+    if (!result.success) {
+      return res.status(404).json(result.errors);
+    }
+
+    return res.status(200).json({ deleted: true });
+
+  } catch (error) {
+    return res.status(500).json({ message: 'Error al eliminar la categoría', error });
+  }
 }
 
-export const CategoriesControllers = { 
-    createCategory, 
-    getAllCategories, 
-    getCategory, 
-    updateCategory, 
-    deleteCategory 
+export const CategoriesControllers = {
+  createCategory,
+  getAllCategories,
+  getCategory,
+  updateCategory,
+  deleteCategory
 };

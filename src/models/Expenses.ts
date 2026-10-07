@@ -6,8 +6,8 @@ InferCreationAttributes<Expenses>> {
     declare id: CreationOptional<number>;
     declare amount: number;
     declare description: string;
-    declare startDate: number;
-    declare endDate: number;
+    declare startDate: Date;
+    declare endDate: Date;
     declare categoryId: number;
     declare providerId: number;
     declare userId: number;

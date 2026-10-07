@@ -1,133 +1,88 @@
-import { Provider } from '../models'
+import { Provider } from '../models';
+import { CreateProvidersInput, ProvidersFilters, UpdateProviderInput } from '../interfaces/provider.interface';
+import { ServiceResponse } from '../interfaces/services.responses';
 
-interface GetProviderFilters {
-    id?: number;
-    razonSocial?: string;
-    cuit?: string;
-    address?: string;
-    city?: string;
-    province?: string;
-    phoneNumber?: string;
-    mail?: string;
-    categoryId?: number;
-}
-
-interface ProviderData {
-    razonSocial: string;
-    cuit: string;
-    address: string;
-    city: string;
-    province: string;
-    phoneNumber?: string;
-    mail?: string;
-    categoryId: number;
-}
-
-
-
-async function createProvider(data: ProviderData) {
-    
+async function createProvider(input: CreateProvidersInput): Promise<ServiceResponse<Provider>> {
+  try {
     const errors: Record<string, string> = {};
 
-    try {
-        const cuitExist = await Provider.findOne({ where: { cuit: data.cuit } });
-        if (cuitExist) errors.cuit = "CUIT repetido";
+    const cuitExist = await Provider.findOne({ where: { cuit: input.cuit } });
+    if (cuitExist) errors.cuit = 'CUIT repetido';
 
-        const razonSocialExist = await Provider.findOne({ where: { razonSocial: data.razonSocial } });
-        if (razonSocialExist) errors.razonSocial = "Razón social repetida";
+    const razonSocialExist = await Provider.findOne({ where: { razonSocial: input.razonSocial } });
+    if (razonSocialExist) errors.razonSocial = 'Razón social repetida';
 
-        if (Object.keys(errors).length > 0) {
-            return {
-                success: false,
-                errors
-            };
-        }
-        
-        const newProvider = await Provider.create(data);
-
-        return {
-            success: true,
-            data: newProvider,
-        };
-
-    } catch (error) {
-        console.error('Error creating provider:', error);
-        throw new Error('Failed to create provider');
+    if (Object.keys(errors).length > 0) {
+      return { success: false, errors };
     }
+
+    const newProvider = await Provider.create(input);
+    return { success: true, data: newProvider };
+  } catch (error) {
+    console.error('Error creating provider:', error);
+    return { success: false, errors: { message: 'Failed to create provider' } };
+  }
 }
 
-async function getAllProviders() {
-    try {
-        const providers = await Provider.findAll();
-        return providers;
-    } catch (error) {
-        console.error('Error fetching providers:', error);
-        throw new Error('Failed to fetch providers');
-    }
+async function getAllProviders(): Promise<ServiceResponse<Provider[]>> {
+  try {
+    const providers = await Provider.findAll();
+    return { success: true, data: providers };
+  } catch (error) {
+    console.error('Error fetching providers:', error);
+    return { success: false, errors: { message: 'Failed to fetch providers' } };
+  }
 }
 
-async function getProvider(filters: GetProviderFilters) {
-    try {
+async function getProvider(filters: ProvidersFilters): Promise<ServiceResponse<Provider | null>> {
+  try {
+    if (!filters.id) return { success: false, errors: { message: 'Provider ID is required' } };
 
-        const provider = await Provider.findOne({
-            where: {id: filters.id}
-        });
-
-        return provider;
-        
-    } catch (error) {
-        console.error('Error fetching providers:', error);
-        throw new Error('Failed to fetch providers');
-    }
+    const provider = await Provider.findByPk(filters.id);
+    return { success: true, data: provider };
+  } catch (error) {
+    console.error('Error fetching provider:', error);
+    return { success: false, errors: { message: 'Failed to fetch provider' } };
+  }
 }
 
-async function updateProvider(id: number, filters: GetProviderFilters) {
-    try {
-        const provider = await Provider.findOne({ where: { id } });
+async function updateProvider(id: number, data: UpdateProviderInput): Promise<ServiceResponse<Provider>> {
+  try {
+    const provider = await Provider.findByPk(id);
 
-        console.log("SOY PROVIDER", provider)
+    console.log("SOY PROVIDER", provider)
 
-        if (!provider) {
-            return null;
-        }
+    if (!provider) return { success: false, errors: { message: 'Provider not found' } };
 
-        await provider.update({
-            razonSocial: filters.razonSocial,
-            cuit: filters.cuit,
-            address: filters.address,
-            city: filters.city,
-            province: filters.province,
-            phoneNumber: filters.phoneNumber,
-            mail: filters.mail,
-        });
+    await provider.update(data);
 
-        return provider;
-    } catch (error) {
-        console.error('Error updating provider:', error);
-        throw new Error('Failed to update provider');
-    }
+    return { success: true, data: provider };
+  } catch (error) {
+    console.error('Error updating provider:', error);
+    return { success: false, errors: { message: 'Failed to update provider' } };
+  }
 }
 
-async function deleteProvider(id: number) {
-    try {
-        const provider = await Provider.findOne({ where: { id } });
+async function deleteProvider(id: number): Promise<ServiceResponse<boolean>> {
+  try {
+    const provider = await Provider.findByPk(id);
 
-        if (!provider) {
-            return null;
-        }
+    console.log("SOY PROVIDER EN DELETE", provider)
 
-        await provider.destroy();
-        return true;
-    } catch (error) {
-        console.error('Error deleting provider:', error);
-        throw new Error('Failed to delete provider');
-    }
+    if (!provider) return { success: false, errors: { message: 'Provider not found' } };
+
+    await provider.destroy();
+    return { success: true, data: true };
+  } catch (error) {
+    console.error('Error deleting provider:', error);
+    return { success: false, errors: { message: 'Failed to delete provider' } };
+  }
 }
 
-export const ProviderService = {
-    createProvider,
-    getAllProviders,
-    getProvider,
-    updateProvider,
-    deleteProvider
+export const ProviderServices = {
+  createProvider,
+  getAllProviders,
+  getProvider,
+  updateProvider,
+  deleteProvider,
 };

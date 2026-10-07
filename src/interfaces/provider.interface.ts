@@ -1,5 +1,6 @@
 import {InferAttributes, InferCreationAttributes} from 'sequelize'
-import { Providers } from '../models'
+import { Provider } from '../models'
 
-export type CreateProvidersInput = InferCreationAttributes<Providers>
-export type ProvidersFilters = Partial<InferAttributes<Providers>>
+export type CreateProvidersInput = InferCreationAttributes<Provider>
+export type ProvidersFilters = Partial<InferAttributes<Provider>>
+export type UpdateProviderInput = Partial<InferAttributes<Provider>>;

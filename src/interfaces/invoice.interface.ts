@@ -3,3 +3,4 @@ import {Invoice} from '../models'
 
 export type CreateInvoiceInput = InferCreationAttributes<Invoice>;
 export type InvoiceFilters = Partial<InferAttributes<Invoice>>
+export type UpdateInvoiceInput = Partial<InferAttributes<Invoice>>;
